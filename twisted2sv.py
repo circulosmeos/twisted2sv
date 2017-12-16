@@ -52,6 +52,7 @@ def get_totp_token(secret):
     return get_hotp_token(secret, intervals_no=int(time.time())//30)
 
 # xor_crypt_string patched from https://gist.github.com/revolunet/2412240
+# and https://stackoverflow.com/questions/29408173/byte-operations-xor-in-python
 def xor_crypt_string(data, key='awesomepassword', encode=False, decode=False):
     from sys import byteorder
     import base64
