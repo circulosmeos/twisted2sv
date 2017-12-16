@@ -6,28 +6,23 @@
 # licenced under GPLv3
 #
 version_string = ( "\n"
-    "twisted2sv - 2 Step Verification TOTP python script v1.0\n" )
+    "twisted2sv - 2 Step Verification TOTP python script v2.0\n" )
 
 help_message = ( "\n"
     "$ python3 twisted2sv.py [iterations/action]\n\n"
     "    With no params, script returns #iterations (2) consecutive TOTP tokens\n"
     "in 30s intervals for evey dupla in secret[['name', 'encoded_key'], ... ].\n"
-    "    If param is 'e', secrets in secret[] are encoded with xor\n"
-    "and printed as base64 ready for reinsertion in secret[].\n"
+    #"    If param is 'e', secrets in secret[] are encoded with xor\n"
+    #"and printed as base64 ready for manual reinsertion in secret[].\n"
     "    If param is the string used as xor key, secrets in secret[]\n"
-    "are decoded and printed.\n" )
-
-first_use_message = ( "\n"
-    "For 1st use:\n"
-    "\t* edit this file filling the 'secret' array\n"
-    "\t* choose a 'mangling_string'\n"
-    "\t* run `python3 twisted2sv.py e`\n"
-    "\t* refill your 'secret' array with that/those new values\n" )
+    "are decoded and printed.\n\n"
+    "    Please, note that on first run this script overwrites itself\n"
+    "in order to encrypt the keys.\n"
+    )
 
 # this is the secret[] array you have to first fill with your TOTP key(s)
-# and then rewrite after `python3 twisted2sv.py e`
 secret = [
-    ['',  'MZXW633PN5XW6MZX'], 
+    ['site1',    'MZXW633PN5XW6MZX'],
     #['site2',    'MZXW633PN5XW6MZY'],
     #['site3',    'MZXW633PN5XW6MZZ'], # ...
         ]
@@ -40,7 +35,7 @@ mangling_string = '8bJ3f5xn7wgFa9bv'
 #.................................................
 
 
-import hmac, base64, struct, hashlib, time
+import hmac, base64, struct, hashlib, time, re
 from sys import argv
 
 
@@ -103,24 +98,50 @@ for i in range(1, iterations + 1):
     for key in secret:
         
         # print key identifier:
-        if (len(key[0])!=0):
+        if (action != '' and len(key[0])!=0):
             print ( "%s:\t"%key[0], end='' )
 
         if (action == 'e'):
-            # encode secret[] keys with mangling_string:
+            # encode secret[] keys with mangling_string and just print the result:
             print ( xor_crypt_string(key[1], mangling_string, encode = True).decode('ascii') )
         elif (action == 'd'):
             # show plain secret[] keys:
-            print ( xor_crypt_string(key[1], mangling_string, decode = True).decode('ascii') )
+            try:
+                print ( xor_crypt_string(key[1], mangling_string, decode = True).decode('ascii') )
+            except:
+                print ( "This key is in plain text, so no decryption is necessary.\n" )
         else:
             try:
                 # print 2SV TOTP Code !
-                print ( '(%d) %06d'%( i , get_totp_token( xor_crypt_string(key[1], mangling_string, decode = True) ) ) )
+                print ( "%s:\t(%d) %06d" % ( key[0], i , get_totp_token( xor_crypt_string(key[1], mangling_string, decode = True) ) ) )
             except:
                 # secret[] keys have not been yet encoded:
-                print (version_string + 
-                    first_use_message )
-                exit (2)
+                print ( "Auto-phagocytizing to encrypt TOTP keys ...\n" )
+                # calculate encrypted keys
+                encrypted_secret = {}
+                for clear_key in secret:
+                    encrypted_secret[clear_key[1]] = xor_crypt_string(clear_key[1], mangling_string, encode = True).decode('ascii')
+                # open this script:
+                this_very_same_file = open(argv[0], 'r')
+                # go line by line, substituying the keys with their encrypted counterpart:
+                this_very_same_file_modified = ''
+                for line in this_very_same_file:
+                    for clear_key in encrypted_secret.keys():
+                        if re.search("'" + clear_key + "'", line):
+                            this_very_same_file_modified += re.sub(
+                                "^(.*')" + clear_key + "('.*)",
+                                r"\1" + encrypted_secret[clear_key] + r"\2", line )
+                            break
+                    else:
+                        this_very_same_file_modified += line
+                this_very_same_file.close()
+                # now write the new script with the substitued (encrypted) keys:
+                this_very_same_file = open (argv[0], 'w')
+                this_very_same_file.write( this_very_same_file_modified )
+                this_very_same_file.close()
+                print ( "Done.\n" )
+                action ='e'
+                break
     
     if ( action != '' ):
         exit (0)

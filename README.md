@@ -16,12 +16,11 @@ If param is the string used as xor key, secrets in secret[] are decoded and prin
 
 * edit this file filling the 'secret' array
 * choose a 'mangling_string'
-* run `python3 twisted2sv.py e`
-* refill your 'secret' array with that/those new values
+* run `python3 twisted2sv.py`: the script will rewrite itself with encrypted keys
+* ready to use!
 
-# code to fill
+# code to fill manually before first run:
     # this is the secret[] array you have to first fill with your TOTP key(s)
-    # and then rewrite after `python3 twisted2sv.py e`
     secret = [
         ['',  'MZXW633PN5XW6MZX'], 
         #['site2',    'MZXW633PN5XW6MZY'],
