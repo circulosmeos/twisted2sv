@@ -5,27 +5,31 @@ so a casual inspection couldn't retrieve them
  
     $ python3 twisted2sv.py [iterations/action/?]
 
-With no params, script returns #iterations (2) consecutive TOTP tokens in 30s intervals for evey dupla in secret[['name', 'encoded_key'], ... ].    
-If param is the string used as xor key, secrets in secret[] are decoded and printed.\n    
+With no params, script returns #iterations (2) consecutive TOTP tokens in 30s intervals for evey pair in secret[['name', 'encoded_key'], ... ].
+
+If param is the string used as xor key, secrets in secret[] are decoded and printed.
+    
+If param is 'Delete', secrets in secret[] are randomized so the script seems valid BUT TOKENS WON'T BE USEFUL AT ALL.
+    
+Please, note that on first run *this script overwrites itself* in order to encrypt the keys you'd have previously written in it.
+    
+You can later add new clear keys in secret[] AFTER THE PREVIOUS ONES: the script will detect and encrypt them (rewriting itself again) on the next run.
 
 # first use setup
 
-* edit this file filling the 'secret' array
-* choose a 'mangling_string'
-* run `python3 twisted2sv.py`: the script will rewrite itself with encrypted keys
+* edit the script filling the 'secret' array
+* run `python3 twisted2sv.py`: the script will rewrite itself with encrypted keys and a random XOR key
 * ready to use!
 
 # code to fill manually before first run:
-    # this is the secret[] array you have to first fill with your TOTP key(s)
+    # This is the secret[] array you have to first fill with your TOTP key(s).
+    # You can later add new clear keys AFTER THE PREVIOUS ONES: the
+    # script will detect and encrypt them on the next run
     secret = [
         ['',  'MZXW633PN5XW6MZX'], 
         #['site2',    'MZXW633PN5XW6MZY'],
         #['site3',    'MZXW633PN5XW6MZZ'], # ...
             ]
-
-    # this is the random key you have to choose to xor your TOTP keys. 
-    # It's a totally unimportant value with arbitrary length... ASCII only!
-    mangling_string = '8bJ3f5xn7wgFa9bv'
 
 # example of use
 
