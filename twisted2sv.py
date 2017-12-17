@@ -193,7 +193,7 @@ for i in range(1, iterations + 1):
     for key in secret:
         
         # print key identifier:
-        if (action != '' and len(key[0])!=0):
+        if (action != '' and action != DELETE_ACTION_STRING):
             print ( "%s:\t"%key[0], end='' )
 
         if (action == 'e'):

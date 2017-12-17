@@ -12,7 +12,7 @@ If param is the string used as xor key, secrets in secret[] are decoded and prin
 If param is 'Delete', secrets in secret[] are randomized so the script seems valid BUT TOKENS WON'T BE USEFUL AT ALL.
     
 Please, note that on first run *this script overwrites itself* in order to encrypt the keys you'd have previously written in it.
-    
+
 You can later add new clear keys in secret[] AFTER THE PREVIOUS ONES: the script will detect and encrypt them (rewriting itself again) on the next run.
 
 # first use setup
@@ -44,6 +44,10 @@ You can later add new clear keys in secret[] AFTER THE PREVIOUS ONES: the script
     site1:     (2) 862833 
     my site 2: (2) 274628 
     (13) <-- this decremental counter tells you the seconds until these tokens' death
+
+# more info
+
+[](https://circulosmeos.wordpress.com/2017/12/16/twisted-2-step-verification-totp-script/)
 
 # licence
 [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html)
