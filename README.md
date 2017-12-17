@@ -47,7 +47,7 @@ You can later add new clear keys in secret[] AFTER THE PREVIOUS ONES: the script
 
 # more info
 
-[](https://circulosmeos.wordpress.com/2017/12/16/twisted-2-step-verification-totp-script/)
+[https://circulosmeos.wordpress.com/2017/12/16/twisted-2-step-verification-totp-script/](https://circulosmeos.wordpress.com/2017/12/16/twisted-2-step-verification-totp-script/)
 
 # licence
 [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html)
