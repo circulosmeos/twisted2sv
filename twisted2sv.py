@@ -76,7 +76,7 @@ def xor_crypt_string(data, key='awesomepassword', encode=False, decode=False):
     from sys import byteorder
     import base64
     if decode:
-        data = base64.decodestring(bytearray(data, 'ascii'))
+        data = base64.decodebytes(bytearray(data, 'ascii'))
     else:
         data = bytearray(data, 'ascii')
     while (len(data)>len(key)):
@@ -88,7 +88,7 @@ def xor_crypt_string(data, key='awesomepassword', encode=False, decode=False):
     int_enc = int_data ^ int_key
     int_enc = int_enc.to_bytes(len(data), byteorder)
     if encode:
-        return base64.encodestring(int_enc).strip()
+        return base64.encodebytes(int_enc).strip()
     return int_enc
 
 # random.choices() exists only since 3.6
